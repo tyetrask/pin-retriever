@@ -11,6 +11,8 @@ Pinterest's current web interface seems to display oddly when trying to use the 
 
 Within the specified output path, a directory will be created for each board `name`. Within each directory will be images named by their pin `id`.
 
+(Only public boards can be retrieved via API)
+
 ### To Test
 ```
 bundle exec test

@@ -14,14 +14,14 @@ class PinRetriever
   def download_pin_images!
     validate_output_path!
     validate_access_token!
-    @boards = @pinterest_api.me_boards.body["data"]
-    puts "Found #{@boards.size} board(s)"
-    @boards.each do |board|
+    boards = @pinterest_api.me_boards.body["data"]
+    puts "Found #{boards.size} board(s)"
+    boards.each do |board|
       FileUtils.mkdir_p("#{@output_path}/#{board["name"]}")
-      @pins = @pinterest_api.board_pins(board["id"]).body["data"]
-      pin_count = @pins.size
+      pins = @pinterest_api.board_pins(board["id"]).body["data"]
+      pin_count = pins.size
       puts "Downloading #{pin_count} pin image(s) for '#{board["name"]}' board"
-      @pins.each_with_index do |pin, index|
+      pins.each_with_index do |pin, index|
         print "."
         source_url = pin["image"]["original"]["url"]
         destination_file_extension = File.extname(source_url)

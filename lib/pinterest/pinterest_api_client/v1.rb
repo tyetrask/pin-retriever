@@ -6,51 +6,50 @@ require_relative 'response.rb'
 class PinterestAPIClient
   class V1
 
-    BASE_URL = 'https://api.pinterest.com/v1/'
+    BASE_URL = 'https://api.pinterest.com/v1'
 
     def initialize(access_token)
       @access_token = access_token
     end
 
     def me
-      url = "#{BASE_URL}me/#{query_string}"
+      url = "/me/#{query_string}"
       get_request(url)
     end
 
     def board(board_id)
-      url = "#{BASE_URL}boards/#{board_id}/#{query_string}"
+      url = "/boards/#{board_id}/#{query_string}"
       get_request(url)
     end
 
     def me_boards
-      url = "#{BASE_URL}me/boards/#{query_string}"
+      url = "/me/boards/#{query_string}"
       get_request(url)
     end
 
     def pin(pin_id)
-      url = "#{BASE_URL}pins/#{pin_id}/#{query_string}"
+      url = "/pins/#{pin_id}/#{query_string}"
       get_request(url)
     end
 
     def me_pins
-      url = "#{BASE_URL}me/pins/#{query_string}"
+      url = "/me/pins/#{query_string}"
       get_request(url)
     end
 
     def board_pins(board_id)
       query_options = {fields: "id,image"}
-      url = "#{BASE_URL}boards/#{board_id}/pins/#{query_string(query_options)}"
+      url = "/boards/#{board_id}/pins/#{query_string(query_options)}"
       get_request(url)
     end
 
     private
 
-    def get_request(url)
-      uri = URI.parse(url)
+    def get_request(path)
+      uri = URI.parse("#{BASE_URL}#{path}")
       request = Net::HTTP.new(uri.host, uri.port)
       request.use_ssl = true
-      response = request.get(uri.request_uri)
-      Response.new(response)
+      Response.new(request.get(uri.request_uri))
     end
 
     def query_string(query_object={})

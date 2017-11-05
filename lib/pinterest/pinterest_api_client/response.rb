@@ -1,7 +1,7 @@
 class PinterestAPIClient
   class Response
 
-    attr_accessor :status, :body
+    attr_reader :status, :body
 
     def initialize(response)
       @status = response.code.to_i
