@@ -13,39 +13,33 @@ class PinterestAPIClient
     end
 
     def me
-      query_options = {fields: "id,first_name"}
-      url = "#{BASE_URL}me/#{query_string(query_options)}"
+      url = "#{BASE_URL}me/#{query_string}"
       get_request(url)
     end
 
-    # Board ID Format: <username>/<board_name>
     def board(board_id)
-      query_options = {fields: "id,name,counts"}
-      url = "#{BASE_URL}boards/#{board_id}/#{query_string(query_options)}"
+      url = "#{BASE_URL}boards/#{board_id}/#{query_string}"
       get_request(url)
     end
 
     def me_boards
-      query_options = {fields: "id,name,counts"}
-      url = "#{BASE_URL}me/boards/#{query_string(query_options)}"
+      url = "#{BASE_URL}me/boards/#{query_string}"
       get_request(url)
     end
 
     def pin(pin_id)
-      query_options = {fields: "id"}
-      url = "#{BASE_URL}pins/#{pin_id}/#{query_string(query_options)}"
+      url = "#{BASE_URL}pins/#{pin_id}/#{query_string}"
       get_request(url)
     end
 
     def me_pins
-      query_options = {fields: "id"}
-      url = "#{BASE_URL}me/pins/#{query_string(query_options)}"
+      url = "#{BASE_URL}me/pins/#{query_string}"
       get_request(url)
     end
 
     def board_pins(board_id)
-      query_options = {fields: "id"}
-      url = "#{BASE_URL}me/boards/#{board_id}/pins/#{query_string(query_options)}"
+      query_options = {fields: "id,image"}
+      url = "#{BASE_URL}boards/#{board_id}/pins/#{query_string(query_options)}"
       get_request(url)
     end
 
