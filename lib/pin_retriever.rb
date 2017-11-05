@@ -5,11 +5,10 @@ require 'lib/pinterest/pinterest_api_client'
 
 class PinRetriever
 
-  def initialize(access_token, output_path)
+  def initialize(access_token, output_path, pinterest_api=PinterestAPIClient::V1)
     @access_token = access_token
-    @pinterest_api = PinterestAPIClient::V1.new(@access_token)
+    @pinterest_api = pinterest_api.new(@access_token)
     @output_path = output_path
-    @me = nil
   end
 
   def download_pin_images!
@@ -18,16 +17,20 @@ class PinRetriever
     @boards = @pinterest_api.me_boards.body["data"]
     puts "Found #{@boards.size} board(s)"
     @boards.each do |board|
+      FileUtils.mkdir_p("#{@output_path}/#{board["name"]}")
       @pins = @pinterest_api.board_pins(board["id"]).body["data"]
-      FileUtils.mkdir("#{@output_path}/#{board["name"]}")
-      puts "Found #{@pins.size} pins(s) for this board"
-      @pins.each do |pin|
+      pin_count = @pins.size
+      puts "Downloading #{pin_count} pin image(s) for '#{board["name"]}' board"
+      @pins.each_with_index do |pin, index|
+        print "."
         source_url = pin["image"]["original"]["url"]
         destination_file_extension = File.extname(source_url)
         destination_path = "#{@output_path}/#{board["name"]}/#{pin["id"]}#{destination_file_extension}"
         download_image(source_url, destination_path)
       end
+      print "\n"
     end
+    puts "Download completed successfully!"
   end
 
   private
@@ -38,8 +41,8 @@ class PinRetriever
 
   def validate_access_token!
     response = @pinterest_api.me
-    raise "Could not access Pinterest API" unless response.status == 200 && response.body["data"]["id"]
-    @me = response.body["data"]
+    me = response.body["data"]
+    raise "Could not access Pinterest API" unless response.status == 200 && me["id"]
   end
 
   def download_image(source_url, destination_path)
